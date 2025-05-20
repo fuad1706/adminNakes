@@ -13,27 +13,18 @@ const AdminLogin: React.FC = () => {
   useEffect(() => {
     const token = localStorage.getItem("adminToken");
     if (token) {
-      console.log("AdminLogin - Token found, verifying");
       axios
         .get("https://nakestudios-be.vercel.app/api/auth/verify", {
           headers: { "x-auth-token": token },
         })
         .then((response) => {
-          console.log("AdminLogin - Verification response:", response.data);
           if (response.data.isValid) {
-            console.log("AdminLogin - Token valid, redirecting to dashboard");
             navigate("/admin-dashboard", { replace: true });
           } else {
-            console.log("AdminLogin - Token invalid, staying on login page");
             localStorage.removeItem("adminToken");
           }
         })
-        .catch((error) => {
-          console.error(
-            "AdminLogin - Token verification error:",
-            error.response?.data || error.message
-          );
-          console.log("AdminLogin - Token invalid, staying on login page");
+        .catch(() => {
           localStorage.removeItem("adminToken");
         });
     }
@@ -45,7 +36,6 @@ const AdminLogin: React.FC = () => {
     setLoading(true);
 
     try {
-      console.log("AdminLogin - Attempting login for:", email);
       const response = await axios.post(
         "https://nakestudios-be.vercel.app/api/auth/login",
         {
@@ -54,29 +44,16 @@ const AdminLogin: React.FC = () => {
         }
       );
 
-      console.log("AdminLogin - Full login response:", response.data);
       const { token } = response.data;
 
       if (!token) {
         throw new Error("No token received from server");
       }
 
-      console.log("AdminLogin - Login successful, token received");
       localStorage.setItem("adminToken", token);
-      console.log(
-        "AdminLogin - Token stored in localStorage:",
-        token.substring(0, 15) + "..."
-      );
-
       axios.defaults.headers.common["x-auth-token"] = token;
-
-      console.log("AdminLogin - Navigating to dashboard");
       navigate("/admin-dashboard", { replace: true });
     } catch (err: any) {
-      console.error(
-        "AdminLogin - Login failed:",
-        err.response?.data || err.message
-      );
       setError(
         err.response?.data?.message || "Invalid credentials or server error"
       );

@@ -1,4 +1,3 @@
-// src/components/hero/HeroTab.tsx
 import React, { useState, useEffect } from "react";
 import type { FormEvent } from "react";
 import type { HeroImage } from "../../types";
@@ -33,24 +32,18 @@ const HeroTab: React.FC<HeroTabProps> = ({ showNotification }) => {
         );
       }
       const publicData = await publicResponse.json();
-      console.log("Public endpoint data:", publicData);
 
       const token = getAuthToken();
       if (!token) {
         setError("No authentication token found. Please log in.");
-        setImages(publicData.images || []); // Fallback to public data for debugging
+        setImages(publicData.images || []);
         return;
       }
-
-      console.log(
-        "Using token for authentication (first 15 chars):",
-        token.substring(0, 15)
-      );
 
       const response = await fetch(`${BASE_URL}/api/hero/admin`, {
         headers: {
           Authorization: `Bearer ${token}`,
-          "x-auth-token": token, // Add this header as well in case the backend expects it
+          "x-auth-token": token,
         },
       });
 
@@ -64,7 +57,6 @@ const HeroTab: React.FC<HeroTabProps> = ({ showNotification }) => {
       setImages(data.images || []);
       setError(null);
     } catch (error: any) {
-      console.error("Error fetching images:", error);
       setError(error.message || "Failed to fetch images");
     }
   };
@@ -87,7 +79,6 @@ const HeroTab: React.FC<HeroTabProps> = ({ showNotification }) => {
 
     try {
       if (editingImage && editingImage._id) {
-        console.log(`Updating image with ID: ${editingImage._id}`);
         const response = await fetch(
           `${BASE_URL}/api/hero/${editingImage._id}`,
           {
@@ -128,7 +119,6 @@ const HeroTab: React.FC<HeroTabProps> = ({ showNotification }) => {
         showNotification("success", "New image successfully uploaded!");
       }
     } catch (error: any) {
-      console.error("Error submitting form:", error);
       setError(error.message || "Failed to submit form");
       showNotification("error", "Failed to save image");
     } finally {
@@ -160,8 +150,6 @@ const HeroTab: React.FC<HeroTabProps> = ({ showNotification }) => {
       return;
     }
 
-    console.log(`Deleting image with ID: ${imageId}`);
-
     try {
       const response = await fetch(`${BASE_URL}/api/hero/${imageId}`, {
         method: "DELETE",
@@ -177,7 +165,6 @@ const HeroTab: React.FC<HeroTabProps> = ({ showNotification }) => {
         throw new Error(`Delete failed with status: ${response.status}`);
       }
     } catch (error: any) {
-      console.error("Error deleting image:", error);
       setError(error.message || "Failed to delete image");
       showNotification("error", "Failed to delete image");
     }
@@ -223,8 +210,6 @@ const HeroTab: React.FC<HeroTabProps> = ({ showNotification }) => {
       id: img._id,
       order: idx,
     }));
-
-    console.log("Reordering images with data:", orderData);
 
     try {
       // First, check if the reorder endpoint exists or use individual updates as fallback
@@ -290,7 +275,6 @@ const HeroTab: React.FC<HeroTabProps> = ({ showNotification }) => {
         }
       }
     } catch (error: any) {
-      console.error("Error reordering images:", error);
       setError(error.message || "Failed to reorder images");
       showNotification("error", "Failed to reorder images");
 
