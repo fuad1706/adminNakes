@@ -1,6 +1,6 @@
 // src/components/hero/PhotographyImageGrid.tsx
 import React from "react";
-import PhotographyImageCard from "./photographyImageCard";
+import PhotographySectionImageCard from "./PhotographySectionImageCard";
 import type { HeroImage } from "../../types";
 
 interface PhotographyImageGridProps {
@@ -24,7 +24,7 @@ const PhotographyImageGrid: React.FC<PhotographyImageGridProps> = ({
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {images.map((image) => (
-            <PhotographyImageCard
+            <PhotographySectionImageCard
               key={image._id}
               image={image}
               onEdit={onEdit}

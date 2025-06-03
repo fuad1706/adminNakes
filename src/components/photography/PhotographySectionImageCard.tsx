@@ -1,20 +1,16 @@
-// src/components/hero/PhotographyImageCard.tsx
 import React from "react";
 import type { HeroImage } from "../../types";
 
-interface PhotographyImageCardProps {
+interface PhotographySectionImageCardProps {
   image: HeroImage;
   onEdit: (image: HeroImage) => void;
   onDelete: (imageId: string) => void;
   onReorder: (imageId: string, direction: "up" | "down") => void;
 }
 
-const PhotographyImageCard: React.FC<PhotographyImageCardProps> = ({
-  image,
-  onEdit,
-  onDelete,
-  onReorder,
-}) => {
+const PhotographySectionImageCard: React.FC<
+  PhotographySectionImageCardProps
+> = ({ image, onEdit, onDelete, onReorder }) => {
   return (
     <div className="border rounded-lg p-4">
       <img
@@ -56,4 +52,4 @@ const PhotographyImageCard: React.FC<PhotographyImageCardProps> = ({
   );
 };
 
-export default PhotographyImageCard;
+export default PhotographySectionImageCard;
