@@ -5,6 +5,7 @@ import HeroTab from "./hero/HeroTab";
 import Icre8Tab from "./icre8/Icre8Tab";
 import NewsTab from "./news/NewsTab";
 import MotionTab from "./motion/MotionTab";
+import PhotographyTab from "./photography/PhotographyTab";
 
 interface TabContentProps {
   activeTab: ActiveTab;
@@ -19,7 +20,7 @@ const TabContent: React.FC<TabContentProps> = ({
     case "hero":
       return <HeroTab showNotification={showNotification} />;
     case "photography":
-      return <h1 className="text-2xl font-semibold">Photography Content</h1>;
+      return <PhotographyTab showNotification={showNotification} />;
     case "icre8":
       return <Icre8Tab showNotification={showNotification} />;
     case "motion":
