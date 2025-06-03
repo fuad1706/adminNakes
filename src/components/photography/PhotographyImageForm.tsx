@@ -1,4 +1,3 @@
-// src/components/photography/PhotographyImageForm.tsx
 import React, { useState, useEffect } from "react";
 import type { FormEvent } from "react";
 import type { HeroImage } from "../../types";
@@ -52,14 +51,23 @@ const PhotographyImageForm: React.FC<PhotographyImageFormProps> = ({
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked, files } = e.target;
     if (type === "file" && files && files.length > 0) {
-      // Create URL for preview
+      const file = files[0];
+      if (!file.type.startsWith("image/")) {
+        setFormError("Please select an image file (e.g., JPEG, PNG)");
+        return;
+      }
+      if (file.size > 10 * 1024 * 1024) {
+        setFormError("File size exceeds 10MB. Please choose a smaller file.");
+        return;
+      }
+
       if (previewUrl && previewUrl !== editingImage?.url) {
         URL.revokeObjectURL(previewUrl);
       }
 
-      const newPreviewUrl = URL.createObjectURL(files[0]);
+      const newPreviewUrl = URL.createObjectURL(file);
       setPreviewUrl(newPreviewUrl);
-      setFormData({ ...formData, imageFile: files[0] });
+      setFormData({ ...formData, imageFile: file });
       setFormError(null);
     } else if (type === "checkbox") {
       setFormData({ ...formData, [name]: checked });
@@ -70,13 +78,11 @@ const PhotographyImageForm: React.FC<PhotographyImageFormProps> = ({
   };
 
   const validateForm = (): boolean => {
-    // When creating a new image, file is required
     if (!editingImage && !formData.imageFile) {
       setFormError("Image file is required for new images");
       return false;
     }
 
-    // Order is always required
     if (!formData.order.trim()) {
       setFormError("Order field is required");
       return false;
@@ -92,7 +98,6 @@ const PhotographyImageForm: React.FC<PhotographyImageFormProps> = ({
     }
   };
 
-  // Clean up any object URLs when component unmounts
   useEffect(() => {
     return () => {
       if (previewUrl && previewUrl !== editingImage?.url) {
@@ -129,14 +134,13 @@ const PhotographyImageForm: React.FC<PhotographyImageFormProps> = ({
             </p>
           )}
 
-          {/* Image Preview */}
           {previewUrl && (
             <div className="mt-3">
               <p className="text-sm font-medium text-gray-700 mb-1">Preview:</p>
               <img
                 src={previewUrl}
                 alt="Preview"
-                className="max-h-32 object-contain border border-gray-300 rounded"
+                className="max-h-64 object-contain border border-gray-300 rounded-md"
               />
             </div>
           )}
@@ -207,7 +211,7 @@ const PhotographyImageForm: React.FC<PhotographyImageFormProps> = ({
             <button
               type="button"
               onClick={onCancel}
-              className="px-4 py-2 bg-gray-300 text-gray-900 rounded-md hover:bg-gray-400 transition-colors"
+              className="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition-colors"
             >
               Cancel
             </button>
